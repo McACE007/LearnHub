@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Form, FormItem, FormField, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { createCourse, getCourses } from "@/lib/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
 import Link from "next/link"
@@ -31,8 +32,9 @@ export default function CreatePage({ }: Props) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.post("/api/course", values);
-      router.push(`/teacher/courses/${response.data.id}`)
+      const course = await createCourse(values.title);
+      toast.success("Course Created")
+      router.push(`/teacher/courses/${course?.id}`)
     } catch (error) {
       toast.error("Something went wrong!!")
     }
